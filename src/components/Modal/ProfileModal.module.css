@@ -14,10 +14,11 @@
 
 /* ✅ 모달 박스 */
 .modal {
-  background-color: #f5f7ff; /* 💙 ChatList의 배경에 맞춤 */
+  background-color: #f5f7ff;
   border-radius: 20px;
   padding: 30px 24px;
   width: 320px;
+  max-width: 90%; /* 모바일 대응 */
   text-align: center;
   position: relative;
   box-shadow: 0 6px 20px rgba(63, 81, 181, 0.2);
@@ -38,7 +39,6 @@
   border: 2px solid #3f51b5;
 }
 
-/* ✅ 기본 아이콘 스타일 */
 .avatarIcon {
   font-size: 80px;
   color: #aaa;
@@ -48,14 +48,12 @@
   background-color: white;
 }
 
-/* ✅ 이메일 텍스트 */
 .email {
   font-size: 0.9rem;
   color: #666;
   margin-bottom: 6px;
 }
 
-/* ✅ 닉네임 텍스트 */
 .nickname {
   font-size: 1.1rem;
   font-weight: 600;
@@ -63,17 +61,15 @@
   color: #2c387e;
 }
 
-/* ✅ 버튼 그룹 */
 .buttonGroup {
   display: flex;
   gap: 8px;
+  flex-direction: column;
 }
 
 .buttonGroup button {
-  flex: 1;
   width: 100%;
   padding: 10px;
-  margin-bottom: 8px;
   background-color: #3f51b5;
   border: none;
   border-radius: 12px;
@@ -87,7 +83,6 @@
   background-color: #303f9f;
 }
 
-/* ✅ 닫기 버튼 */
 .closeButton {
   position: absolute;
   top: 12px;
@@ -98,7 +93,6 @@
   cursor: pointer;
 }
 
-/* ✅ 닉네임 수정 input 영역 */
 .editRow {
   display: flex;
   flex-direction: column;
@@ -110,11 +104,10 @@
 .editRow input[type="text"],
 .editRow button {
   width: 100%;
-  box-sizing: border-box; /* 패딩과 테두리 포함 너비 계산 */
+  box-sizing: border-box;
 }
 
 .nicknameInput {
-  flex: 1;
   padding: 8px 12px;
   font-size: 1rem;
   border: 1.5px solid #ccc;
@@ -128,15 +121,14 @@
   outline: none;
 }
 
-/* ✅ 저장 버튼 */
 .saveBtn {
-  background-color: #3f51b5; /* 프로젝트 버튼 컬러 */
+  background-color: #3f51b5;
   color: white;
   border: none;
-  padding: 8px 10px;         /* ⬅ 크기 줄임 */
+  padding: 8px 10px;
   border-radius: 8px;
   font-weight: 600;
-  font-size: 0.9rem;         /* ⬅ 폰트 사이즈 축소 */
+  font-size: 0.9rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -152,12 +144,11 @@
   box-shadow: none;
 }
 
-/* ✅ 취소 버튼 */
 .cancelBtn {
   background-color: #e0e0e0;
   color: #444;
   border: none;
-  padding: 8px 10px;         /* ⬅ 동일한 크기로 통일 */
+  padding: 8px 10px;
   border-radius: 8px;
   font-weight: 600;
   font-size: 0.9rem;
@@ -174,4 +165,30 @@
   color: red;
   font-size: 0.85rem;
   margin-top: 6px;
+}
+
+/* ✅ 모바일 대응 */
+@media (max-width: 480px) {
+  .modal {
+    width: 100%;
+    max-width: 360px;
+    margin: 0 16px;
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .avatar,
+  .avatarIcon {
+    width: 70px;
+    height: 70px;
+    font-size: 70px;
+  }
+
+  .nickname {
+    font-size: 1rem;
+  }
+
+  .editRow {
+    gap: 10px;
+  }
 }

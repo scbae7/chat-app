@@ -240,6 +240,9 @@ function ChatRoom() {
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="메시지를 입력하세요"
           className={styles.input}
+          autoComplete="off"     
+          autoCorrect="off"      
+          spellCheck={false}
         />
         <button type="submit" className={styles.button} disabled={!newMessage.trim()}>
           보내기

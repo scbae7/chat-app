@@ -2,6 +2,8 @@
   display: flex;
   min-height: 100vh;
   font-family: 'Segoe UI', sans-serif;
+  width: 100%; /* ✅ 이거로 확실하게 고정 */
+  overflow-x: hidden; /* 또는 여기에 직접 넣어도 됨 */
 }
 
 .left {
@@ -57,7 +59,7 @@
   }
 
   .left, .right {
-    width: 100%;
-    padding: 20px;
+    /* width: 100%;
+    padding: 20px; */
   }
 }
