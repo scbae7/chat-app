@@ -1,0 +1,135 @@
+.form {
+  width: 100%;
+  max-width: 360px;
+  background-color: #ffffff;
+  padding: 32px 28px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+h2 {
+  margin-bottom: 24px;
+  text-align: center;
+  font-size: 24px;
+  color: #333;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+.input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+  outline: none;
+}
+
+.button {
+  width: 100%;
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.error {
+  color: #dc3545;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.linkText {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  text-align: center;
+  color: #555;
+}
+
+.link {
+  color: #007bff;
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+/* 비밀번호 wrapper (input + 눈 아이콘) */
+.passwordWrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+/* 비밀번호 input은 기존 input 스타일을 그대로 적용 */
+.passwordWrapper .input {
+  padding-right: 40px; /* 아이콘 들어갈 공간 확보 */
+}
+
+/* 눈 아이콘 위치 */
+.toggle {
+  position: absolute;
+  right: 12px;
+  top: 40%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s;
+}
+
+.toggle:hover {
+  color: #333;
+}
+
+/* 버튼 개선 (아이콘 들어갈 여유 포함) */
+.button {
+  width: 100%;
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* 아이콘과 텍스트 사이 간격 */
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+/* 예: Google 로그인 버튼용 */
+.socialButton {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  color: #333;
+}
+
+.socialButton:hover {
+  background-color: #f5f5f5;
+}

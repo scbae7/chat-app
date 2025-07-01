@@ -1,0 +1,193 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  padding: 0 24px;
+  height: 60px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #007bff;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+}
+
+.dot {
+  color: #ff3b30;
+  margin-left: 4px;
+  font-weight: 900;
+}
+
+.searchWrapper {
+  flex: 1;
+  max-width: 400px;
+  margin: 0 24px;
+  position: relative;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 8px 36px 8px 12px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
+}
+
+.searchIcon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  pointer-events: none;
+  font-size: 16px;
+}
+
+.rightMenu {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: #555;
+  position: relative;
+  padding: 4px;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.iconButton:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+  color: #007bff;
+}
+
+/* 알림 뱃지 (필요하면 사용) */
+/* .badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #ff3b30;
+  color: white;
+  font-size: 10px;
+  padding: 2px 5px;
+  border-radius: 10px;
+} */
+
+.profile {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 8px;
+  border: 1.5px solid #007bff;
+}
+
+.avatarIcon {
+  font-size: 36px;
+  color: #007bff;
+  margin-right: 8px;
+}
+
+.displayName {
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+  margin-right: 4px;
+}
+
+.caret {
+  font-size: 10px;
+  color: #666;
+  user-select: none;
+}
+
+.dropdown {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  width: 120px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdownItem {
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.25s;
+}
+
+.dropdownItem:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+
+/* 모바일 화면에서 (태블릿/폰 등) */
+@media (max-width: 768px) {
+  .header {
+    padding: 0 12px;
+  }
+
+  .searchWrapper {
+    max-width: none;
+    flex: 1;
+    margin: 0 8px;
+  }
+
+  .searchInput {
+    font-size: 14px;
+    padding: 8px 32px 8px 10px;
+  }
+
+  .rightMenu {
+    gap: 12px;
+  }
+
+  .displayName {
+    display: none; /* 이름 숨기고 아이콘만 보이게 */
+  }
+
+  .avatar,
+  .avatarIcon {
+    width: 30px;
+    height: 30px;
+  }
+}

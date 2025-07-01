@@ -1,0 +1,177 @@
+/* ✅ 모달 전체 배경 */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* ✅ 모달 박스 */
+.modal {
+  background-color: #f5f7ff; /* 💙 ChatList의 배경에 맞춤 */
+  border-radius: 20px;
+  padding: 30px 24px;
+  width: 320px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 6px 20px rgba(63, 81, 181, 0.2);
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ✅ 프로필 이미지 */
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #3f51b5;
+}
+
+/* ✅ 기본 아이콘 스타일 */
+.avatarIcon {
+  font-size: 80px;
+  color: #aaa;
+  border: 2px solid #3f51b5;
+  border-radius: 50%;
+  padding: 8px;
+  background-color: white;
+}
+
+/* ✅ 이메일 텍스트 */
+.email {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+/* ✅ 닉네임 텍스트 */
+.nickname {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #2c387e;
+}
+
+/* ✅ 버튼 그룹 */
+.buttonGroup {
+  display: flex;
+  gap: 8px;
+}
+
+.buttonGroup button {
+  flex: 1;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 8px;
+  background-color: #3f51b5;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.buttonGroup button:hover {
+  background-color: #303f9f;
+}
+
+/* ✅ 닫기 버튼 */
+.closeButton {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+/* ✅ 닉네임 수정 input 영역 */
+.editRow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.editRow input[type="file"],
+.editRow input[type="text"],
+.editRow button {
+  width: 100%;
+  box-sizing: border-box; /* 패딩과 테두리 포함 너비 계산 */
+}
+
+.nicknameInput {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 1rem;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.nicknameInput:focus {
+  border-color: #3f51b5;
+  box-shadow: 0 0 6px rgba(63, 81, 181, 0.2);
+  outline: none;
+}
+
+/* ✅ 저장 버튼 */
+.saveBtn {
+  background-color: #3f51b5; /* 프로젝트 버튼 컬러 */
+  color: white;
+  border: none;
+  padding: 8px 10px;         /* ⬅ 크기 줄임 */
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;         /* ⬅ 폰트 사이즈 축소 */
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.saveBtn:hover {
+  background-color: #303f9f;
+}
+
+.saveBtn:disabled {
+  background-color: #ccc;
+  color: #999;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ✅ 취소 버튼 */
+.cancelBtn {
+  background-color: #e0e0e0;
+  color: #444;
+  border: none;
+  padding: 8px 10px;         /* ⬅ 동일한 크기로 통일 */
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.statusMsg {
+  font-size: 0.85rem;
+  color: #555;
+  margin-top: 6px;
+}
+
+.errorText {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: 6px;
+}
