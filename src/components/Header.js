@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FaBell, FaUserCircle, FaSearch } from 'react-icons/fa';
+import { FaBell, FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 import ProfileModal from './Modal/ProfileModal';
+import ProfileMenu from './Common/ProfileMenu';
 
 import styles from './Header.module.css';
 
@@ -63,28 +64,11 @@ function Header({ user, onLogout }) {
             {/* <span className={styles.badge}>3</span> */}
           </button>
 
-          <div className={styles.profile} onClick={toggleDropdown} ref={dropdownRef} tabIndex={0}>
-            {user?.photoURL ? (
-              <img src={user.photoURL} alt="프로필" className={styles.avatar} />
-            ) : (
-              <FaUserCircle className={styles.avatarIcon} />
-            )}
-            <span className={styles.displayName}>{user?.displayName || '익명'}</span>
-            <span className={styles.caret}>▼</span>
-
-            {dropdownOpen && (
-              <div className={styles.dropdown}>
-                <button 
-                onClick={openProfileModal} 
-                className={styles.dropdownItem}>
-                  마이페이지
-                </button>
-                <button onClick={onLogout} className={styles.dropdownItem}>
-                  로그아웃
-                </button>
-              </div>
-            )}
-          </div>
+          <ProfileMenu
+            user={user}
+            onLogout={onLogout}
+            onProfileClick={openProfileModal}
+          />
         </div>
       </header>
       {isModalOpen && (

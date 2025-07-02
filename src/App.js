@@ -8,7 +8,7 @@ import { useUserStore } from './store/userStore';
 
 import AuthPage from './pages/AuthPage';
 import ChatList from './components/ChatList';
-import ChatRoom from './components/ChatRoom';
+import ChatRoom from './components/ChatRoom/ChatRoom';
 
 function App() {
   const [loading, setLoading] = useState(true);

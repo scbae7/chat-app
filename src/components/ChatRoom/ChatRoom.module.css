@@ -168,38 +168,83 @@
   color: #999;
   margin-top: 2px;
   margin-left: 4px;
-  align-self: flex-end;
+  align-self: flex-start;
 }
 
 /* ✅ 입력창 */
+/* ChatInput 관련 스타일 */
+
 .form {
   display: flex;
   padding-top: 12px;
   border-top: 1px solid #ccc;
-  gap: 8px;
   background-color: white;
+  gap: 12px; /* 좀 더 넉넉한 간격 */
+  align-items: center; /* 세로 가운데 정렬 */
 }
 
-.input {
+.inputGroup {
+  width: 100%;
   flex: 1;
-  padding: 10px 14px;
-  font-size: 1rem;
-  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px; /* 아이콘 버튼과 입력창 간격 넉넉히 */
   border: 1px solid #ccc;
+  border-radius: 24px;
+  padding: 6px 16px; /* 터치 영역 키움 */
+  background-color: #fff;
+}
+
+.inputGroup input[type="text"] {
+  border: none;
   outline: none;
+  font-size: 1.1rem;
+  flex: 1;
+  background-color: transparent;
+  padding: 8px 0;
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: #666;
+  padding: 10px; /* 터치 영역 키우기 */
+  transition: color 0.3s ease;
+  user-select: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconButton:hover,
+.iconButton:focus {
+  color: #2196f3;
+  outline: none;
+  background-color: rgba(33, 150, 243, 0.1);
 }
 
 .button {
-  padding: 10px 16px;
+  padding: 16px 20px;
   background-color: #2196f3;
   color: white;
   border: none;
-  border-radius: 20px;
+  border-radius: 24px;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  user-select: none;
+  flex-shrink: 0;
 }
 
-.button:hover {
+.button:hover:not(:disabled) {
   background-color: #1976d2;
 }
 
@@ -221,9 +266,13 @@
     gap: 8px;
   }
 
-  .leftSection,
-  .rightSection {
+  .leftSection {
     justify-content: space-between;
+    width: 100%;
+  }
+
+  .rightSection {
+    justify-content: space-around;
     width: 100%;
   }
 
@@ -232,8 +281,9 @@
   }
 
   .logoutButton {
-    width: 100%;
-    font-size: 1rem;
+    width: auto; /* ✅ 자동 너비로 조정 */
+    font-size: 0.9rem; /* ✅ 살짝만 줄임 */
+    padding: 6px 12px; /* ✅ 버튼 높이도 줄임 */
   }
 
   .displayName {
@@ -245,13 +295,31 @@
   }
 
   .form {
+    width: 100%;
     flex-direction: column;
+    gap: 10px;
+    padding-top: 8px;
   }
 
-  .input,
+  .inputGroup {
+    padding: 0;
+    border-radius: 20px;
+  }
+
+  .iconButton {
+    font-size: 1.4rem;
+    padding: 12px;
+  }
+
   .button {
     width: 100%;
-    font-size: 1rem;
+    padding: 14px 0;
+    font-size: 1.1rem;
+    border-radius: 20px;
+  }
+
+  .inputGroup input[type="text"] {
+    font-size: 1.1rem;
   }
 
   .profileImg {

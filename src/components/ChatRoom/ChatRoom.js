@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useUserStore } from '../store/userStore';
+import { useUserStore } from '../../store/userStore';
 
 import { signOut } from 'firebase/auth';
-import { auth, db } from '../firebase';
+import { auth, db } from '../../firebase';
 
 import {
   collection,
@@ -19,12 +19,15 @@ import {
   getDoc,
 } from 'firebase/firestore';
 
-import ProfileModal from './Modal/ProfileModal';
+import ProfileMenu from '../Common/ProfileMenu';
+import ChatInput from './ChatInput';
+import ProfileModal from '../Modal/ProfileModal';
 
 import { FaArrowAltCircleLeft } from 'react-icons/fa';
 
 import styles from './ChatRoom.module.css';
-import UserProfileModal from './Modal/UserProfileModal';
+import UserProfileModal from '../Modal/UserProfileModal';
+import EmojiPickerModal from '../Common/EmojiPickerModal';
 
 
 function ChatRoom() {
@@ -42,6 +45,10 @@ function ChatRoom() {
   const [showProfile, setShowProfile] = useState(false);
 
   const [selectedUserInfo, setSelectedUserInfo] = useState(null);
+
+  const [showEmojiModal, setShowEmojiModal] = useState(false);
+
+  const openProfileModal = () => setShowProfile(true);
 
   useEffect(() => {
     if (!roomId) return;
@@ -122,6 +129,17 @@ function ChatRoom() {
     }
   };
 
+  const handleImageUpload = (file) => {
+    console.log("이미지 파일", file);
+  };
+
+  const handleEmojiClick = (emoji) => {
+    setNewMessage((prev) => prev + emoji)
+  };
+  const toggleEmojiModal = () => {
+    setShowEmojiModal((prev) => !prev);
+  }
+
   const handleLogout = async () => {
     await signOut(auth);
     navigate('/');
@@ -143,16 +161,11 @@ function ChatRoom() {
               <div className={styles.roomTitle}>{roomInfo?.name || '채팅방'}</div>
             </div>
 
-            <div className={styles.rightSection}>
-              <img
-                src={user.photoURL || '/img/default-profile.png'}
-                alt="프로필"
-                className={styles.profileImg}
-                onClick={() => setShowProfile(true)}
-              />
-              <span className={styles.displayName}>{user.displayName || '익명'}</span>
-              <button onClick={handleLogout} className={styles.logoutButton}>로그아웃</button>
-            </div>
+            <ProfileMenu
+              user={user}
+              onLogout={handleLogout}
+              onProfileClick={openProfileModal}
+            />
 
             {showProfile && <ProfileModal user={user} onClose={() => setShowProfile(false)} />}
           </>
@@ -234,20 +247,19 @@ function ChatRoom() {
         )}
       </div>
 
-      <form onSubmit={sendMessage} className={styles.form}>
-        <input
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="메시지를 입력하세요"
-          className={styles.input}
-          autoComplete="off"     
-          autoCorrect="off"      
-          spellCheck={false}
+      <ChatInput 
+        newMessage={newMessage}
+        setNewMessage={setNewMessage}
+        onSend={sendMessage}
+        onImageUpload={handleImageUpload}
+        onEmojiClick={toggleEmojiModal}
+      />
+      {showEmojiModal && (
+        <EmojiPickerModal 
+          onEmojiClick={handleEmojiClick}
+          onClose={() => setShowEmojiModal(false)}
         />
-        <button type="submit" className={styles.button} disabled={!newMessage.trim()}>
-          보내기
-        </button>
-      </form>
+      )}
     </div>
   );
 }

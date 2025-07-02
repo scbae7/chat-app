@@ -1,0 +1,104 @@
+.profile {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+  padding: 4px 8px;
+  border-radius: 20px;
+  transition: background-color 0.2s;
+}
+
+.profile:hover {
+  background-color: rgba(0, 123, 255, 0.05); /* hover시 약간의 하이라이트 */
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 6px;
+  border: 1.5px solid #007bff;
+}
+
+.avatarIcon {
+  font-size: 36px;
+  color: #007bff;
+  margin-right: 6px;
+}
+
+.displayName {
+  font-weight: 600;
+  font-size: 18px;
+  color: #333;
+  background-color: #f0f0f0;
+  padding: 4px 8px;
+  border-radius: 12px;
+  margin-right: 6px;
+}
+
+.caretIcon {
+  font-size: 20px;
+  color: #666;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.profile:hover .caretIcon {
+  color: #007bff;
+  transform: rotate(180deg); /* 드롭다운 버튼에 UX적 움직임 제공 */
+}
+
+/* ▼ 드롭다운 메뉴 */
+.dropdown {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  min-width: 120px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdownItem {
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.25s, color 0.25s;
+}
+
+.dropdownItem:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+  .avatar,
+  .avatarIcon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .displayName {
+    display: none;
+  }
+}
