@@ -2,7 +2,6 @@ import { all } from 'axios';
 import { useEffect, useState } from 'react';
 
 const usePreviewImage = (file) => {
-
   const [previewURL, setPreviewURL] = useState(null);
   const [error, setError] = useState('');
 
@@ -29,7 +28,7 @@ const usePreviewImage = (file) => {
     };
   }, [file]);
 
-  return {previewURL, error};
-}
+  return { previewURL, error };
+};
 
 export default usePreviewImage;

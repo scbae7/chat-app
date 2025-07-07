@@ -2,8 +2,8 @@ import React from 'react';
 import styles from './ProfileModal.module.css';
 import { FaUserCircle, FaTimes } from 'react-icons/fa';
 
-export default function UserProfileModal({ userInfo, onClose }) {
-  if(!userInfo) return null;
+export default function UserProfileModal({ userInfo, onClose, onAvatarClick }) {
+  if (!userInfo) return null;
 
   return (
     <div className={styles.overlay} onClick={onClose}>
@@ -12,7 +12,12 @@ export default function UserProfileModal({ userInfo, onClose }) {
           <FaTimes size={20} />
         </button>
         {userInfo.photoURL ? (
-          <img src={userInfo.photoURL} alt="프로필" className={styles.avatar} />
+          <img
+            src={userInfo.photoURL}
+            alt="프로필"
+            className={styles.avatar}
+            onClick={onAvatarClick}
+          />
         ) : (
           <FaUserCircle className={styles.avatarIcon} />
         )}
@@ -20,5 +25,5 @@ export default function UserProfileModal({ userInfo, onClose }) {
         <p className={styles.email}>{userInfo.email || '이메일 비공개'}</p>
       </div>
     </div>
-  )
+  );
 }

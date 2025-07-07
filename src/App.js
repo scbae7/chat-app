@@ -14,10 +14,10 @@ function App() {
   const [loading, setLoading] = useState(true);
   const user = useUserStore((state) => state.user);
   const setUser = useUserStore((state) => state.setUser);
-  
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if(user) {
+      if (user) {
         setUser(user);
       }
       setLoading(false);
@@ -29,13 +29,17 @@ function App() {
     <Routes>
       {/* 로그인 / 회원가입 */}
       <Route path="/" element={<AuthPage />} />
-      
+
       {/* ✅ 로그인된 유저만 ChatRoom 접근 가능 */}
       <Route
         path="/chatList"
         element={
           !loading ? (
-            user ? <ChatList user={user} /> : <Navigate to="/" />
+            user ? (
+              <ChatList user={user} />
+            ) : (
+              <Navigate to="/" />
+            )
           ) : null
         }
       />
@@ -43,13 +47,17 @@ function App() {
         path="/chat/:roomId"
         element={
           !loading ? (
-            user ? <ChatRoom user={user} /> : <Navigate to="/" />
+            user ? (
+              <ChatRoom user={user} />
+            ) : (
+              <Navigate to="/" />
+            )
           ) : null
         }
       />
 
       {/* 유효하지 않은 경로일 경우 로그인으로 */}
-      <Route path="*" element={<Navigate to="/" />}/>
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 }

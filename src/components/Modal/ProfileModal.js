@@ -10,10 +10,9 @@ import styles from './ProfileModal.module.css';
 import { FaUserCircle, FaTimes } from 'react-icons/fa';
 import { FiUploadCloud } from 'react-icons/fi';
 
-import uploadToCloudinary  from '../Cloudinary/uploadToCloudinary';
+import uploadToCloudinary from '../../utils/Cloudinary/uploadToCloudinary';
 
-function ProfileModal({ onClose }) {
-
+function ProfileModal({ onClose, onAvatarClick }) {
   const user = useUserStore((state) => state.user);
   const updateNickname = useUserStore((state) => state.updateNickname);
 
@@ -86,27 +85,35 @@ function ProfileModal({ onClose }) {
       setStatusMsg('프로필이 성공적으로 변경되었습니다!');
       setIsEditing(false);
       setPhotoFile(null);
-
     } catch (error) {
       console.error(error);
       setStatusMsg('변경 중 오류가 발생했습니다.');
     }
-  }
+  };
 
   if (!user) return null;
 
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-
         <button className={styles.closeButton} onClick={onClose}>
           <FaTimes size={20} />
         </button>
 
-        {previewURL? (
-          <img src={previewURL} alt="프로필 미리보기" className={styles.avatar} />
+        {previewURL ? (
+          <img
+            src={previewURL}
+            alt="프로필 미리보기"
+            className={styles.avatar}
+          />
         ) : user.photoURL ? (
-          <img src={user.photoURL} alt='기존 프로필' className={styles.avatar} />
+          <img
+            src={user.photoURL}
+            alt="기존 프로필"
+            className={styles.avatar}
+            onClick={onAvatarClick}
+            style={{ cursor: 'pointer' }}
+          />
         ) : (
           <FaUserCircle className={styles.avatarIcon} />
         )}
@@ -118,26 +125,26 @@ function ProfileModal({ onClose }) {
         {isEditing ? (
           <>
             <div className={styles.editRow}>
-              <input 
-                type='file'
-                accept='image/*'
+              <input
+                type="file"
+                accept="image/*"
                 onChange={handlePhotoChange}
               />
               <input
-                type='text'
+                type="text"
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
                 className={styles.nicknameInput}
               />
               <div className={styles.buttonGroup}>
-                 <button
+                <button
                   onClick={handleUploadAndSave}
                   className={styles.saveBtn}
                   disabled={!nickname.trim() || !isChanged || !!error}
                 >
                   저장
                 </button>
-                 <button
+                <button
                   onClick={() => {
                     setNickname(originalNickname);
                     setIsEditing(false);

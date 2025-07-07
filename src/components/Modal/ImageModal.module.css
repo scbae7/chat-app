@@ -1,0 +1,50 @@
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContent {
+  position: relative;
+  width: 90vw; /* 가로 고정 */
+  max-width: 600px;
+  height: 80vh; /* 세로 고정 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #3a3a3a, #1f1f1f);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.modalImage {
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  background-color: rgba(0, 0, 0, 0.3); /* 살짝 어두운 배경 */
+  width: 80%;
+}
+
+.closeButton {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  padding: 6px;
+  cursor: pointer;
+  z-index: 10;
+}

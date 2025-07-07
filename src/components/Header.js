@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import ProfileModal from './Modal/ProfileModal';
 import ProfileMenu from './Common/ProfileMenu';
+import ImageModal from './Modal/ImageModal';
 
 import styles from './Header.module.css';
 
@@ -11,6 +12,10 @@ function Header({ user, onLogout }) {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // state: 이미지 모달 상태
+  const [modalImage, setModalImage] = useState(null);
+
   const dropdownRef = useRef(null);
 
   // 드롭다운 외부 클릭 시 닫기
@@ -19,7 +24,7 @@ function Header({ user, onLogout }) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
       }
-    }
+    };
     document.addEventListener('mousedown', handleClickOutSide);
     return () => document.removeEventListener('mousedown', handleClickOutSide);
   }, []);
@@ -35,7 +40,7 @@ function Header({ user, onLogout }) {
   const openProfileModal = () => {
     setIsModalOpen(true);
     setDropdownOpen(false);
-  };  
+  };
 
   const closeProfileModal = () => {
     setIsModalOpen(false);
@@ -72,13 +77,16 @@ function Header({ user, onLogout }) {
         </div>
       </header>
       {isModalOpen && (
-        <ProfileModal 
-          user={user} 
-          onClose={closeProfileModal} 
+        <ProfileModal
+          user={user}
+          onClose={closeProfileModal}
+          onAvatarClick={() => setModalImage(user.photoURL)}
         />
       )}
+
+      {/* 이미지 확대 모달 */}
+      <ImageModal imageUrl={modalImage} onClose={() => setModalImage(null)} />
     </>
-    
   );
 }
 

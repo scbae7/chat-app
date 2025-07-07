@@ -2,19 +2,29 @@ import { useState, useEffect } from 'react';
 
 import { useUserStore } from '../store/userStore';
 
-import Header from './Header'
-
-import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, getDoc, where, getDocs, doc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  query,
+  orderBy,
+  onSnapshot,
+  getDoc,
+  where,
+  getDocs,
+  doc,
+} from 'firebase/firestore';
 import { db } from '../firebase';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
+
+import Header from './Header';
 import styles from './ChatList.module.css';
 
 function ChatList() {
-
   const user = useUserStore((state) => state.user);
-  
+
   const navigate = useNavigate();
 
   const [rooms, setRooms] = useState([]);
@@ -23,7 +33,7 @@ function ChatList() {
   const [unreadCounts, setUnreadCounts] = useState({});
 
   useEffect(() => {
-    if(!auth.currentUser) return;
+    if (!auth.currentUser) return;
 
     const q = query(collection(db, 'rooms'), orderBy('createAt', 'desc'));
 
@@ -31,34 +41,42 @@ function ChatList() {
       const roomsArr = [];
       const counts = {};
 
-      await Promise.all(snapshot.docs.map(async (roomDoc) => {
-        const roomId = roomDoc.id;
-        const data = roomDoc.data();
-        roomsArr.push({ id: roomId, ...data});
-        
-        // lastRead 불러오기
-        const lastReadRef = doc(db, 'rooms', roomId, 'lastReads', auth.currentUser.uid);
-        const lastReadSnap = await getDoc(lastReadRef);
+      await Promise.all(
+        snapshot.docs.map(async (roomDoc) => {
+          const roomId = roomDoc.id;
+          const data = roomDoc.data();
+          roomsArr.push({ id: roomId, ...data });
 
-        let lastReadTime = null;
-        if (lastReadSnap.exists()) {
-          lastReadTime = lastReadSnap.data().lastRead;
-        }
-
-        // 메시지 중 lastRead 이후 생성된 메시지 수 조회
-        let unreadQuery;
-        if (lastReadTime) {
-          unreadQuery = query(
-            collection(db, 'rooms', roomId, 'messages', ''),
-            where('createAt', '>', lastReadTime)
+          // lastRead 불러오기
+          const lastReadRef = doc(
+            db,
+            'rooms',
+            roomId,
+            'lastReads',
+            auth.currentUser.uid,
           );
-        } else {
-          unreadQuery = collection(db, 'rooms', roomId, 'messages', '');
-        }
+          const lastReadSnap = await getDoc(lastReadRef);
 
-        const unreadSnap = await getDocs(unreadQuery);
-        counts[roomId] = unreadSnap.size;
-      }));
+          let lastReadTime = null;
+          if (lastReadSnap.exists()) {
+            lastReadTime = lastReadSnap.data().lastRead;
+          }
+
+          // 메시지 중 lastRead 이후 생성된 메시지 수 조회
+          let unreadQuery;
+          if (lastReadTime) {
+            unreadQuery = query(
+              collection(db, 'rooms', roomId, 'messages', ''),
+              where('createAt', '>', lastReadTime),
+            );
+          } else {
+            unreadQuery = collection(db, 'rooms', roomId, 'messages', '');
+          }
+
+          const unreadSnap = await getDocs(unreadQuery);
+          counts[roomId] = unreadSnap.size;
+        }),
+      );
 
       setRooms(roomsArr);
       setUnreadCounts(counts);
@@ -79,7 +97,7 @@ function ChatList() {
       setNewRoomName('');
       navigate(`/chat/${docRef.id}`);
     } catch (error) {
-      console.error("채팅방 생성 실패:", error);
+      console.error('채팅방 생성 실패:', error);
     }
   };
 
@@ -91,27 +109,26 @@ function ChatList() {
 
   return (
     <div className={styles.container}>
-
       <Header user={user} onLogout={handleLogout} />
 
       <form onSubmit={createRoom} className={styles.form}>
         <input
-          type='text'
-          placeholder='새 채팅방 이름'
+          type="text"
+          placeholder="새 채팅방 이름"
           value={newRoomName}
           onChange={(e) => setNewRoomName(e.target.value)}
           className={styles.input}
         />
         <button
-         type='submit' 
-         className={styles.button}
-         disabled={!newRoomName.trim()}
+          type="submit"
+          className={styles.button}
+          disabled={!newRoomName.trim()}
         >
           생성
         </button>
       </form>
       <ul className={styles.roomList}>
-        {rooms.map(room => (
+        {rooms.map((room) => (
           <li
             key={room.id}
             className={styles.roomItem}
@@ -126,7 +143,9 @@ function ChatList() {
             <div className={styles.roomName}>
               {room.name}
               {unreadCounts[room.id] > 0 && (
-              <span className={styles.unreadBadge}>{unreadCounts[room.id]}</span>
+                <span className={styles.unreadBadge}>
+                  {unreadCounts[room.id]}
+                </span>
               )}
             </div>
 
@@ -146,7 +165,7 @@ function ChatList() {
         ))}
       </ul>
     </div>
-  )
+  );
 }
 
 export default ChatList;

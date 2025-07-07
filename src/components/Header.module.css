@@ -159,7 +159,6 @@
   color: white;
 }
 
-
 /* 모바일 화면에서 (태블릿/폰 등) */
 @media (max-width: 768px) {
   .header {

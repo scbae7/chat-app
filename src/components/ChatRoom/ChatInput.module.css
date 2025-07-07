@@ -1,0 +1,187 @@
+/* 📁 ChatInput.module.css */
+
+.form {
+  display: flex;
+  padding-top: 12px;
+  border-top: 1px solid #ccc;
+  background-color: white;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.inputGroup {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #ccc;
+  border-radius: 24px;
+  padding: 6px 16px;
+  background-color: #fff;
+}
+
+.inputGroup input[type='text'] {
+  border: none;
+  outline: none;
+  font-size: 1.1rem;
+  flex: 1;
+  background-color: transparent;
+  padding: 8px 0;
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: #666;
+  padding: 10px;
+  transition: color 0.3s ease;
+  user-select: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconButton:hover,
+.iconButton:focus {
+  color: #2196f3;
+  outline: none;
+  background-color: rgba(33, 150, 243, 0.1);
+}
+
+.previewBox {
+  position: relative;
+  margin-top: 10px;
+  max-width: 150px;
+}
+
+.previewImage {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.cancelPreviewBtn {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.errorMsg {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.button {
+  padding: 16px 20px;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.button:hover:not(:disabled) {
+  background-color: #1976d2;
+}
+
+.button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+.previewBox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #ddd;
+  padding: 8px;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.previewImage {
+  max-width: 80px;
+  max-height: 80px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.cancelPreviewBtn {
+  background-color: transparent;
+  border: none;
+  color: #888;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.cancelPreviewBtn:hover {
+  color: #f44336;
+}
+
+.escInfo {
+  font-size: 12px;
+  color: #999;
+  user-select: none;
+  margin-left: auto;
+  font-style: italic;
+}
+
+.hidden {
+  display: none;
+}
+
+/* ✅ 반응형 */
+@media (max-width: 480px) {
+  .form {
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 8px;
+  }
+
+  .inputGroup {
+    padding: 0;
+    border-radius: 20px;
+  }
+
+  .iconButton {
+    font-size: 1.4rem;
+    padding: 12px;
+  }
+
+  .button {
+    width: 100%;
+    padding: 14px 0;
+    font-size: 1.1rem;
+    border-radius: 20px;
+  }
+
+  .inputGroup input[type='text'] {
+    font-size: 1.1rem;
+  }
+}

@@ -1,3 +1,6 @@
+/* ChatRoom.module.css */
+
+/* ✅ 전체 레이아웃 */
 .container {
   max-width: 600px;
   height: 100vh;
@@ -14,27 +17,60 @@
   overflow: hidden;
 }
 
-/* ✅ Header */
+/* ✅ 채팅박스 */
+.chatBox {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 16px 8px;
+  background-color: #f7f7f7;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ✅ 반응형 공통 */
+@media (max-width: 480px) {
+  .container {
+    padding: 12px;
+    border-radius: 0;
+  }
+  .chatBox {
+    padding: 12px 4px;
+  }
+}
+
+/* header 영역 */
+
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
   padding-bottom: 12px;
   border-bottom: 1px solid #ccc;
   background-color: #fff;
+  position: relative;
 }
 
 .leftSection {
   display: flex;
   align-items: center;
   gap: 12px;
+  /* flex-shrink: 0; 필요시 추가 */
+}
+
+.centerSection {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.2rem;
+  font-weight: bold;
+  white-space: nowrap; /* 줄바꿈 방지 */
 }
 
 .rightSection {
   display: flex;
   align-items: center;
   gap: 12px;
+  margin-left: auto;
 }
 
 .roomTitle {
@@ -85,18 +121,30 @@
   background-color: #d32f2f;
 }
 
-/* ✅ 메시지 박스 */
-.chatBox {
-  flex-grow: 1;
-  overflow-y: auto;
-  padding: 16px 8px;
-  background-color: #f7f7f7;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+@media (max-width: 480px) {
+  .header {
+    gap: 8px;
+  }
+
+  .logoutButton {
+    width: auto;
+    font-size: 0.9rem;
+    padding: 6px 12px;
+  }
+
+  .displayName {
+    font-size: 0.95rem;
+  }
+
+  .profileImg {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+  }
 }
 
-/* ✅ 메시지 구조 */
+/* 채팅방 영역 */
+
 .messageWrapper {
   display: flex;
   align-items: flex-end;
@@ -122,7 +170,6 @@
   object-fit: cover;
 }
 
-/* ✅ 말풍선 영역 */
 .bubbleArea {
   display: flex;
   flex-direction: column;
@@ -130,7 +177,6 @@
   position: relative;
 }
 
-/* 보낸 사람 이름 */
 .senderName {
   font-size: 0.75rem;
   color: #888;
@@ -138,7 +184,7 @@
   margin-left: 6px;
 }
 
-/* ✅ 메시지 말풍선 */
+/* 메시지 말풍선 */
 .messageBubble {
   padding: 10px 14px;
   border-radius: 18px;
@@ -146,23 +192,44 @@
   word-break: break-word;
   line-height: 1.5;
   position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px; /* 텍스트와 이미지 간 간격 */
+  max-width: 70%;
 }
 
+/* 내 메시지 말풍선 */
 .myBubble {
-  /* background-color: #ffe400; */
   background-color: #007bff;
-  /* color: #000; */
   color: #fff;
   align-self: flex-end;
   border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 18px; /* 부드럽게 */
+  border-top-right-radius: 18px;
+  border-top-left-radius: 18px;
 }
 
+/* 상대 메시지 말풍선 */
 .otherBubble {
   background-color: #f1f1f1;
+  color: #333;
   border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 18px; /* 부드럽게 */
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
 }
 
-/* ✅ 타임스탬프 */
+/* 이미지 전용 메시지 (텍스트 없을 때) */
+.imageOnly {
+  padding: 0;
+  background: none;
+  box-shadow: none;
+  max-width: 220px;
+  align-self: center; /* 중앙 정렬 */
+  border-radius: 12px;
+  overflow: hidden;
+}
+
 .timestamp {
   font-size: 0.7rem;
   color: #999;
@@ -171,163 +238,18 @@
   align-self: flex-start;
 }
 
-/* ✅ 입력창 */
-/* ChatInput 관련 스타일 */
-
-.form {
-  display: flex;
-  padding-top: 12px;
-  border-top: 1px solid #ccc;
-  background-color: white;
-  gap: 12px; /* 좀 더 넉넉한 간격 */
-  align-items: center; /* 세로 가운데 정렬 */
-}
-
-.inputGroup {
+/* 이미지 스타일 */
+.chatImage {
   width: 100%;
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 12px; /* 아이콘 버튼과 입력창 간격 넉넉히 */
-  border: 1px solid #ccc;
-  border-radius: 24px;
-  padding: 6px 16px; /* 터치 영역 키움 */
-  background-color: #fff;
+  height: auto;
+  max-width: 160px;
+  max-height: 160px;
+  border-radius: 12px;
+  object-fit: cover;
+  display: block;
 }
 
-.inputGroup input[type="text"] {
-  border: none;
-  outline: none;
-  font-size: 1.1rem;
-  flex: 1;
-  background-color: transparent;
-  padding: 8px 0;
-}
-
-.hiddenFileInput {
-  display: none;
-}
-
-.iconButton {
-  background: none;
-  border: none;
-  font-size: 1.6rem;
-  cursor: pointer;
-  color: #666;
-  padding: 10px; /* 터치 영역 키우기 */
-  transition: color 0.3s ease;
-  user-select: none;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.iconButton:hover,
-.iconButton:focus {
-  color: #2196f3;
-  outline: none;
-  background-color: rgba(33, 150, 243, 0.1);
-}
-
-.button {
-  padding: 16px 20px;
-  background-color: #2196f3;
-  color: white;
-  border: none;
-  border-radius: 24px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-  user-select: none;
-  flex-shrink: 0;
-}
-
-.button:hover:not(:disabled) {
-  background-color: #1976d2;
-}
-
-.button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-/* ✅ 반응형 대응 */
 @media (max-width: 480px) {
-  .container {
-    padding: 12px;
-    border-radius: 0;
-  }
-
-  .header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-  }
-
-  .leftSection {
-    justify-content: space-between;
-    width: 100%;
-  }
-
-  .rightSection {
-    justify-content: space-around;
-    width: 100%;
-  }
-
-  .roomTitle {
-    font-size: 1.1rem;
-  }
-
-  .logoutButton {
-    width: auto; /* ✅ 자동 너비로 조정 */
-    font-size: 0.9rem; /* ✅ 살짝만 줄임 */
-    padding: 6px 12px; /* ✅ 버튼 높이도 줄임 */
-  }
-
-  .displayName {
-    font-size: 0.95rem;
-  }
-
-  .chatBox {
-    padding: 12px 4px;
-  }
-
-  .form {
-    width: 100%;
-    flex-direction: column;
-    gap: 10px;
-    padding-top: 8px;
-  }
-
-  .inputGroup {
-    padding: 0;
-    border-radius: 20px;
-  }
-
-  .iconButton {
-    font-size: 1.4rem;
-    padding: 12px;
-  }
-
-  .button {
-    width: 100%;
-    padding: 14px 0;
-    font-size: 1.1rem;
-    border-radius: 20px;
-  }
-
-  .inputGroup input[type="text"] {
-    font-size: 1.1rem;
-  }
-
-  .profileImg {
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-  }
-
   .profileImgInMessage {
     width: 28px;
     height: 28px;
@@ -335,6 +257,12 @@
 
   .messageBubble {
     font-size: 0.9rem;
+    max-width: 90%;
+  }
+
+  .chatImage {
+    max-width: 160px;
+    max-height: 160px;
   }
 
   .timestamp {

@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import styles from '../styles/AuthPage.module.css';
+
 import LoginForm from '../components/LoginForm';
 import SignupForm from '../components/SignupForm';
 
+import styles from '../styles/AuthPage.module.css';
+
 function AuthPage() {
-  const [isLogin,setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(true);
 
   return (
     <div className={styles.authContainer}>
@@ -23,8 +25,7 @@ function AuthPage() {
         )}
       </div>
     </div>
-  )
-
-};
+  );
+}
 
 export default AuthPage;
