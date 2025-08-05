@@ -4,9 +4,15 @@ import LoginForm from '../components/LoginForm';
 import SignupForm from '../components/SignupForm';
 
 import styles from '../styles/AuthPage.module.css';
+import { useNavigate } from 'react-router-dom';
 
 function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
+
+  const handleGuestAccess = () => {
+    navigate('/chatList');
+  };
 
   return (
     <div className={styles.authContainer}>
@@ -16,6 +22,8 @@ function AuthPage() {
         <button onClick={() => setIsLogin(!isLogin)}>
           {isLogin ? '회원가입 하기' : '로그인 하기'}
         </button>
+
+        <button onClick={handleGuestAccess}>비로그인 체험하기</button>
       </div>
       <div className={styles.right}>
         {isLogin ? (

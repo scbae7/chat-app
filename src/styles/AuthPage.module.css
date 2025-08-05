@@ -37,6 +37,7 @@
   cursor: pointer;
   font-weight: bold;
   transition: background 0.3s;
+  margin-bottom: 10px;
 }
 
 .left button:hover {
@@ -58,7 +59,8 @@
     flex-direction: column;
   }
 
-  .left, .right {
+  .left,
+  .right {
     /* width: 100%;
     padding: 20px; */
   }

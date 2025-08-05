@@ -31,7 +31,7 @@ function App() {
       <Route path="/" element={<AuthPage />} />
 
       {/* ✅ 로그인된 유저만 ChatRoom 접근 가능 */}
-      <Route
+      {/* <Route
         path="/chatList"
         element={
           !loading ? (
@@ -54,6 +54,15 @@ function App() {
             )
           ) : null
         }
+      /> */}
+      {/* ✅ 로그인 안한 유저도 접근 가능 */}
+      <Route
+        path="/chatList"
+        element={!loading ? <ChatList user={user} /> : null}
+      />
+      <Route
+        path="/chat/:roomId"
+        element={!loading ? <ChatRoom user={user} /> : null}
       />
 
       {/* 유효하지 않은 경로일 경우 로그인으로 */}

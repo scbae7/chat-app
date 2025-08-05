@@ -195,7 +195,7 @@
   display: inline-flex;
   flex-direction: column;
   gap: 6px; /* 텍스트와 이미지 간 간격 */
-  max-width: 70%;
+  max-width: 80%;
 }
 
 /* 내 메시지 말풍선 */

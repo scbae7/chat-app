@@ -33,8 +33,6 @@ function ChatList() {
   const [unreadCounts, setUnreadCounts] = useState({});
 
   useEffect(() => {
-    if (!auth.currentUser) return;
-
     const q = query(collection(db, 'rooms'), orderBy('createAt', 'desc'));
 
     const unsubscribe = onSnapshot(q, async (snapshot) => {
@@ -47,34 +45,39 @@ function ChatList() {
           const data = roomDoc.data();
           roomsArr.push({ id: roomId, ...data });
 
-          // lastRead 불러오기
-          const lastReadRef = doc(
-            db,
-            'rooms',
-            roomId,
-            'lastReads',
-            auth.currentUser.uid,
-          );
-          const lastReadSnap = await getDoc(lastReadRef);
-
-          let lastReadTime = null;
-          if (lastReadSnap.exists()) {
-            lastReadTime = lastReadSnap.data().lastRead;
-          }
-
-          // 메시지 중 lastRead 이후 생성된 메시지 수 조회
-          let unreadQuery;
-          if (lastReadTime) {
-            unreadQuery = query(
-              collection(db, 'rooms', roomId, 'messages', ''),
-              where('createAt', '>', lastReadTime),
+          if (auth.currentUser) {
+            // lastRead 불러오기
+            const lastReadRef = doc(
+              db,
+              'rooms',
+              roomId,
+              'lastReads',
+              auth.currentUser.uid,
             );
-          } else {
-            unreadQuery = collection(db, 'rooms', roomId, 'messages', '');
-          }
+            const lastReadSnap = await getDoc(lastReadRef);
 
-          const unreadSnap = await getDocs(unreadQuery);
-          counts[roomId] = unreadSnap.size;
+            let lastReadTime = null;
+            if (lastReadSnap.exists()) {
+              lastReadTime = lastReadSnap.data().lastRead;
+            }
+
+            // 메시지 중 lastRead 이후 생성된 메시지 수 조회
+            let unreadQuery;
+
+            if (lastReadTime) {
+              unreadQuery = query(
+                collection(db, 'rooms', roomId, 'messages', ''),
+                where('createAt', '>', lastReadTime),
+              );
+            } else {
+              unreadQuery = collection(db, 'rooms', roomId, 'messages', '');
+            }
+
+            const unreadSnap = await getDocs(unreadQuery);
+            counts[roomId] = unreadSnap.size;
+          } else {
+            counts[roomId] = 0;
+          }
         }),
       );
 
