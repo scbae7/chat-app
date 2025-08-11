@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,7 @@ import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 import styles from '../styles/Login.module.css';
 
-function LoginForm({ switchToSignup }) {
+function LoginForm({ switchToSignup, guestCredentials }) {
   const setUser = useUserStore((state) => state.setUser);
 
   const [email, setEmail] = useState('');
@@ -18,6 +18,13 @@ function LoginForm({ switchToSignup }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate(); // 페이지 이동용
+
+  useEffect(() => {
+    if (guestCredentials) {
+      setEmail(guestCredentials.email);
+      setPassword(guestCredentials.password);
+    }
+  }, [guestCredentials]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -32,7 +39,7 @@ function LoginForm({ switchToSignup }) {
       if (user) {
         setUser(user);
         console.log('로그인한 유저 닉네임:', user.displayName);
-        alert(`환영합니다. ${user.displayName || '익명'}님!`);
+        // alert(`환영합니다. ${user.displayName || '익명'}님!`);
       }
 
       navigate('/chatList'); // ✅ 로그인 성공 시 채팅방으로 이동

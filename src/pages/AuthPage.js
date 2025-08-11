@@ -8,10 +8,15 @@ import { useNavigate } from 'react-router-dom';
 
 function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
+  const [guestCredentials, setGuestCredentials] = useState(null);
   const navigate = useNavigate();
 
   const handleGuestAccess = () => {
-    navigate('/chatList');
+    setIsLogin(true);
+    setGuestCredentials({
+      email: 'test01@naver.com',
+      password: '11111111',
+    });
   };
 
   return (
@@ -23,11 +28,14 @@ function AuthPage() {
           {isLogin ? '회원가입 하기' : '로그인 하기'}
         </button>
 
-        <button onClick={handleGuestAccess}>비로그인 체험하기</button>
+        <button onClick={handleGuestAccess}>Guest 접속하기</button>
       </div>
       <div className={styles.right}>
         {isLogin ? (
-          <LoginForm switchToSignup={() => setIsLogin(false)} />
+          <LoginForm
+            switchToSignup={() => setIsLogin(false)}
+            guestCredentials={guestCredentials}
+          />
         ) : (
           <SignupForm switchToLogin={() => setIsLogin(true)} />
         )}
