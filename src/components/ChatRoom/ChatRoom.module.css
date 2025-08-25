@@ -121,6 +121,26 @@
   background-color: #d32f2f;
 }
 
+.deleteButton {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 40px;
+  height: 40px;
+  font-size: 12px;
+  color: red;
+  border: 1px solid black;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.messageWrapper:hover .deleteButton {
+  opacity: 1;
+}
+
 @media (max-width: 480px) {
   .header {
     gap: 8px;
@@ -150,6 +170,7 @@
   align-items: flex-end;
   gap: 6px;
   margin-bottom: 2px;
+  position: relative;
 }
 
 .myWrapper {
@@ -272,4 +293,21 @@
   .senderName {
     font-size: 0.7rem;
   }
+}
+
+/* 삭제 메시지 중앙 정렬 */
+.deletedCenter {
+  width: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: #999;
+  padding: 6px 8px;
+}
+
+/* 삭제 텍스트 스타일 */
+.deletedMsg {
+  color: #fff;
+  font-size: 12px;
 }

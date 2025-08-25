@@ -215,6 +215,42 @@ function ChatRoom() {
     navigate('/chatList');
   };
 
+  //  event handler: 메시지 삭제
+  const handleDeleteMessage = async (messageId) => {
+    if (!auth.currentUser) return;
+
+    try {
+      // 본인 메시지인지 확인
+      const messageRef = doc(db, 'rooms', roomId, 'messages', messageId);
+      const messageSnap = await getDoc(messageRef);
+
+      if (messageSnap.exists()) {
+        const messageData = messageSnap.data();
+
+        // 본인 메시지 확인
+        if (messageData.uid !== auth.currentUser.uid) {
+          alert('본인 메시지만 삭제할 수 있습니다.');
+          return;
+        }
+      }
+      [];
+
+      // 메시지 삭제 처리
+      await updateDoc(messageRef, {
+        text: '메시지가 삭제되었습니다.',
+        deleted: true,
+      });
+
+      // rooms 컬렉션 lastMessage도 업데이트
+      await updateDoc(doc(db, 'rooms', roomId), {
+        lastMessage: '메시지가 삭제되었습니다.',
+        lastTimestamp: serverTimestamp(),
+      });
+    } catch (error) {
+      console.error('메시지 삭제 실패:', error);
+    }
+  };
+
   // function: 메시지 렌더링 함수 분리 (가독성 향상)
   const renderMessage = (msg, index) => {
     const isMyMessage = msg.uid === user?.uid;
@@ -268,17 +304,35 @@ function ChatRoom() {
           <div
             className={`${styles.messageBubble} ${
               isMyMessage ? styles.myBubble : styles.otherBubble
-            } ${msg.text ? '' : styles.imageOnly}`}
+            } ${msg.text ? '' : styles.imageOnly} ${msg.deleted ? styles.deletedCenter : ''}`}
           >
-            {msg.text && <div>{msg.text}</div>}
-            {msg.imageUrl && (
-              <img
-                src={msg.imageUrl}
-                alt="전송된 이미지"
-                className={styles.chatImage}
-                onClick={() => setModalImage(msg.imageUrl)} // ✅ 클릭하면 확대 모달
-                style={{ cursor: 'pointer' }}
-              />
+            {msg.deleted ? (
+              <span className={styles.deletedMsg}>
+                메시지가 삭제되었습니다.
+              </span>
+            ) : (
+              <>
+                {msg.text && <div>{msg.text}</div>}
+                {msg.imageUrl && (
+                  <img
+                    src={msg.imageUrl}
+                    alt="전송된 이미지"
+                    className={styles.chatImage}
+                    onClick={() => setModalImage(msg.imageUrl)} // ✅ 클릭하면 확대 모달
+                    style={{ cursor: 'pointer' }}
+                  />
+                )}
+              </>
+            )}
+
+            {/* 본인 메시지 삭제 버튼 */}
+            {!msg.deleted && isMyMessage && (
+              <button
+                className={styles.deleteButton}
+                onClick={() => handleDeleteMessage(msg.id)}
+              >
+                삭제
+              </button>
             )}
           </div>
 

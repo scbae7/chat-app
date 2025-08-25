@@ -32,8 +32,34 @@ function ChatList() {
 
   const [unreadCounts, setUnreadCounts] = useState({});
 
+  //  function: 마지막 메시지 시간 포맷 (오늘=시간, 그 외=날짜)
+  const formatLastMessageTime = (timestamp) => {
+    if (!timestamp) return '';
+    const date = timestamp.toDate();
+    const now = new Date();
+
+    const isToday =
+      date.getDate() === now.getDate() &&
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear();
+
+    if (isToday) {
+      //오늘 -> 시:분
+      return date.toLocaleTimeString('ko-KR', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    } else {
+      //어제/그 이전 -> 날짜
+      return date.toLocaleDateString('ko-KR', {
+        month: 'long',
+        day: 'numeric',
+      });
+    }
+  };
+
   useEffect(() => {
-    const q = query(collection(db, 'rooms'), orderBy('createAt', 'desc'));
+    const q = query(collection(db, 'rooms'), orderBy('lastTimestamp', 'desc'));
 
     const unsubscribe = onSnapshot(q, async (snapshot) => {
       const roomsArr = [];
@@ -110,6 +136,8 @@ function ChatList() {
     });
   };
 
+  const getLastMessageText = (room) => room.lastMessage || '';
+
   return (
     <div className={styles.container}>
       <Header user={user} onLogout={handleLogout} />
@@ -153,15 +181,14 @@ function ChatList() {
             </div>
 
             {room.lastMessage && (
-              <div className={styles.lastMessage}>{room.lastMessage}</div>
+              <div className={styles.lastMessage}>
+                {getLastMessageText(room)}
+              </div>
             )}
 
             {room.lastTimestamp && (
               <div className={styles.time}>
-                {new Date(room.lastTimestamp.toDate()).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
+                {formatLastMessageTime(room.lastTimestamp)}
               </div>
             )}
           </li>
