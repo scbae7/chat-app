@@ -18,11 +18,16 @@ input {
 button {
   font-family: inherit;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 /* h 태그 기본 정리 */
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   margin: 0;
   font-weight: 600;
 }
@@ -78,14 +83,18 @@ html {
 }
 
 /* 4. 이미지, 비디오 등 미디어 요소 반응형 처리 */
-img, video {
+img,
+video {
   max-width: 100%;
   height: auto;
   /* display: block; */
 }
 
 /* 5. 버튼, 입력창 등 터치 영역 확보 */
-button, input, select, textarea {
+button,
+input,
+select,
+textarea {
   touch-action: manipulation;
   font-size: 1rem; /* 폰트 크기 기본 맞춤 */
 }
@@ -100,4 +109,8 @@ button, input, select, textarea {
 /* 7. 모바일에서 터치 친화적인 간격 */
 .mobile-padding {
   padding: 0.5rem 1rem;
+}
+
+.app-layout {
+  padding-bottom: 60px;
 }

@@ -1,0 +1,40 @@
+/* Footer.module.css */
+.footer {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  border-top: 1px solid #ddd;
+  background-color: #fff;
+  position: fixed;
+  bottom: 0;
+  left: 50%; /* 화면의 정중앙 기준 */
+  transform: translateX(-50%); /* 자기 너비 절반만큼 왼쪽으로 당김 */
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+  z-index: 10;
+}
+
+.tabButton {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #555;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.tabButton:hover {
+  background-color: #f0f0f0;
+}
+
+.active {
+  font-weight: bold;
+  color: #007bff;
+  background-color: #e6f0ff;
+}

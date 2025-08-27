@@ -1,0 +1,66 @@
+Firestore 스키마
+
+/users/{uid}
+  displayName: string
+  photoURL: string
+  statusMessage?: string
+  createdAt: serverTimestamp()
+
+/rooms/{roomId}           // 1:1이면 roomId = "{uidA}_{uidB}" (정렬 후 조인)
+  type: "dm" | "group"    // 1:1은 "dm"
+  members: [uidA, uidB]
+  memberMap: { [uidA]: true, [uidB]: true }   // where 필터용
+  createdAt: serverTimestamp()
+  lastMessage: string
+  lastTimestamp: serverTimestamp()
+  lastMessageDeleted?: boolean                 // (옵션) 삭제 여부 표시
+
+/rooms/{roomId}/messages/{messageId}
+  text: string
+  imageUrl?: string
+  createdAt: serverTimestamp()
+  uid: string            // 보낸 사람
+  deleted: boolean       // 기본 false
+
+/rooms/{roomId}/lastReads/{uid}
+  lastRead: serverTimestamp()
+
+보안 규칙
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // users: 본인만 수정, 모두 읽기(필요에 따라 제한)
+    match /users/{uid} {
+      allow read: if request.auth != null; // 또는 true로 공개
+      allow create: if request.auth != null && request.auth.uid == uid;
+      allow update, delete: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // rooms: 멤버만 읽기/쓰기
+    match /rooms/{roomId} {
+      allow read, update: if request.auth != null && request.resource.data.memberMap[request.auth.uid] == true;
+      allow create: if request.auth != null;
+
+      // messages: 멤버만 작성/읽기, 삭제/수정은 작성자만 (deleted/text만 변경)
+      match /messages/{messageId} {
+        allow read: if request.auth != null && get(/databases/$(database)/documents/rooms/$(roomId)).data.memberMap[request.auth.uid] == true;
+
+        allow create: if request.auth != null && get(/databases/$(database)/documents/rooms/$(roomId)).data.memberMap[request.auth.uid] == true;
+
+        allow update: if request.auth != null
+          && resource.data.uid == request.auth.uid
+          && request.resource.data.diff(resource.data).changedKeys().hasOnly(['text', 'deleted']);
+
+        // 완전 삭제를 금지하고 흔적 삭제만 허용하려면 delete 막기
+        allow delete: if false;
+      }
+
+      // lastReads: 본인 것만 읽고/쓰기
+      match /lastReads/{uid} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
+    }
+  }
+}

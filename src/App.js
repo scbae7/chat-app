@@ -9,6 +9,8 @@ import { useUserStore } from './store/userStore';
 import AuthPage from './pages/AuthPage';
 import ChatList from './components/ChatList';
 import ChatRoom from './components/ChatRoom/ChatRoom';
+import UserList from './components/UserList';
+import Footer from './components/Footer';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -26,12 +28,13 @@ function App() {
   }, []);
 
   return (
-    <Routes>
-      {/* 로그인 / 회원가입 */}
-      <Route path="/" element={<AuthPage />} />
+    <div style={{ paddingBottom: '60px' }}>
+      <Routes>
+        {/* 로그인 / 회원가입 */}
+        <Route path="/" element={<AuthPage />} />
 
-      {/* ✅ 로그인된 유저만 ChatRoom 접근 가능 */}
-      {/* <Route
+        {/* ✅ 로그인된 유저만 ChatRoom 접근 가능 */}
+        {/* <Route
         path="/chatList"
         element={
           !loading ? (
@@ -55,19 +58,31 @@ function App() {
           ) : null
         }
       /> */}
-      {/* ✅ 로그인 안한 유저도 접근 가능 */}
-      <Route
-        path="/chatList"
-        element={!loading ? <ChatList user={user} /> : null}
-      />
-      <Route
-        path="/chat/:roomId"
-        element={!loading ? <ChatRoom user={user} /> : null}
-      />
+        {/* ✅ 로그인 안한 유저도 접근 가능 */}
+        <Route
+          path="/chatList"
+          element={!loading ? <ChatList user={user} /> : null}
+        />
+        <Route
+          path="/userList"
+          element={!loading ? <UserList user={user} /> : null}
+        />
+        {/* 그룹 채팅 */}
+        <Route
+          path="/chat/:roomId"
+          element={!loading ? <ChatRoom user={user} /> : null}
+        />
+        {/* 1:1 채팅 */}
+        <Route
+          path="/dm/:roomId"
+          element={!loading ? <ChatRoom user={user} /> : null}
+        />
 
-      {/* 유효하지 않은 경로일 경우 로그인으로 */}
-      <Route path="*" element={<Navigate to="/" />} />
-    </Routes>
+        {/* 유효하지 않은 경로일 경우 로그인으로 */}
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+      {!loading && user && <Footer />}
+    </div>
   );
 }
 

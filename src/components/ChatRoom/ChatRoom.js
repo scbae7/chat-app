@@ -1,6 +1,6 @@
 // 1. React, React Router
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 // 2. 외부 라이브러리
 import { signOut } from 'firebase/auth';
@@ -46,9 +46,14 @@ function ChatRoom() {
   // state: URL 파라미터(roomId)와 라우터 내비게이션
   const { roomId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // ref: 채팅 스크롤 끝 위치
   const chatEndRef = useRef();
+
+  // 그룹채팅인지 DM(1:1)인지 구분
+  const isPrivateChat = location.pathname.startsWith('/dm');
+  const baseCollection = isPrivateChat ? 'privateRooms' : 'rooms';
 
   // state: 새 메시지 입력, 메시지 목록, 방 정보
   const [newMessage, setNewMessage] = useState('');
@@ -78,7 +83,7 @@ function ChatRoom() {
     if (!roomId) return;
 
     const q = query(
-      collection(db, `rooms/${roomId}/messages`),
+      collection(db, `${baseCollection}/${roomId}/messages`),
       orderBy('createAt'),
     );
 
@@ -91,7 +96,7 @@ function ChatRoom() {
     });
 
     return () => unsubscribe();
-  }, [roomId]);
+  }, [roomId, baseCollection]);
 
   // effect: 마지막 읽은 시간 업데이트
   useEffect(() => {
@@ -99,7 +104,13 @@ function ChatRoom() {
 
     const updateLastRead = async () => {
       try {
-        const lastReadRef = doc(db, 'rooms', roomId, 'lastReads', user.uid);
+        const lastReadRef = doc(
+          db,
+          baseCollection,
+          roomId,
+          'lastReads',
+          user.uid,
+        );
         await setDoc(
           lastReadRef,
           { lastRead: serverTimestamp() },
@@ -111,13 +122,13 @@ function ChatRoom() {
     };
 
     updateLastRead();
-  }, [roomId, user]);
+  }, [roomId, user, baseCollection]);
 
   // effect: 채팅방 정보 조회
   useEffect(() => {
     if (!roomId) return;
 
-    const roomRef = doc(db, 'rooms', roomId);
+    const roomRef = doc(db, baseCollection, roomId);
 
     const fetchRoomInfo = async () => {
       try {
@@ -131,7 +142,7 @@ function ChatRoom() {
     };
 
     fetchRoomInfo();
-  }, [roomId]);
+  }, [roomId, baseCollection]);
 
   // effect: 메시지 업데이트 시 자동 스크롤
   useEffect(() => {
@@ -155,7 +166,7 @@ function ChatRoom() {
         imageUrl = await uploadToCloudinary(selectedImage);
       }
 
-      await addDoc(collection(db, 'rooms', roomId, 'messages'), {
+      await addDoc(collection(db, baseCollection, roomId, 'messages'), {
         text: imageUrl ? '' : trimmed, // 이미지만 있으면 텍스트는 비워두기
         imageUrl: imageUrl || null,
         createAt: serverTimestamp(),
@@ -164,7 +175,7 @@ function ChatRoom() {
         photoURL: photoURL || '/img/default-profile.png',
       });
 
-      await updateDoc(doc(db, 'rooms', roomId), {
+      await updateDoc(doc(db, baseCollection, roomId), {
         lastMessage: trimmed || (imageUrl ? '사진' : ''),
         lastTimestamp: serverTimestamp(),
       });
@@ -212,7 +223,11 @@ function ChatRoom() {
 
   // event handler: 이전 페이지(채팅 목록)로 이동
   const handleBack = () => {
-    navigate('/chatList');
+    if (window.history.length > 1) {
+      navigate(-1); // 뒤로가기
+    } else {
+      navigate('/chatList'); // 이전 페이지 없으면 기본 채팅 리스트로
+    }
   };
 
   //  event handler: 메시지 삭제
@@ -221,7 +236,7 @@ function ChatRoom() {
 
     try {
       // 본인 메시지인지 확인
-      const messageRef = doc(db, 'rooms', roomId, 'messages', messageId);
+      const messageRef = doc(db, baseCollection, roomId, 'messages', messageId);
       const messageSnap = await getDoc(messageRef);
 
       if (messageSnap.exists()) {
@@ -242,7 +257,7 @@ function ChatRoom() {
       });
 
       // rooms 컬렉션 lastMessage도 업데이트
-      await updateDoc(doc(db, 'rooms', roomId), {
+      await updateDoc(doc(db, baseCollection, roomId), {
         lastMessage: '메시지가 삭제되었습니다.',
         lastTimestamp: serverTimestamp(),
       });

@@ -1,0 +1,116 @@
+/* UserList.module.css */
+
+.container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 24px;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 12px;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #222;
+}
+
+.userList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.userItem {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  margin-bottom: 14px;
+  border-radius: 16px;
+  cursor: pointer;
+  background-color: #f5f7ff;
+  transition:
+    background-color 0.25s ease,
+    box-shadow 0.25s ease;
+  box-shadow: 0 0 0 transparent;
+}
+
+.userItem:hover {
+  background-color: #e8ebff;
+  box-shadow: 0 4px 12px rgba(63, 81, 181, 0.15);
+}
+
+.profileImg {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #ddd;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.userName {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #2c387e;
+}
+
+.userEmail {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* ✅ 반응형 모바일 대응 */
+@media (max-width: 480px) {
+  .container {
+    margin: 20px 12px;
+    padding: 16px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .userItem {
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+
+  .profileImg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .userName {
+    font-size: 1rem;
+  }
+
+  .userEmail {
+    font-size: 0.8rem;
+  }
+}

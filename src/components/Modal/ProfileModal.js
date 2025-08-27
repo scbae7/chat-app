@@ -4,6 +4,8 @@ import { useUserStore } from '../../store/userStore';
 import usePreviewImage from '../../hooks/usePreviewImage';
 
 import { auth } from '../../firebase';
+import { db } from '../../firebase';
+import { doc, updateDoc } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
 
 import styles from './ProfileModal.module.css';
@@ -74,6 +76,13 @@ function ProfileModal({ onClose, onAvatarClick }) {
 
       // 프로필 업데이트
       await updateProfile(auth.currentUser, {
+        displayName: nickname.trim(),
+        photoURL,
+      });
+
+      // firestore users 컬렉션 업데이트
+      const userDocRef = doc(db, 'users', auth.currentUser.uid);
+      await updateDoc(userDocRef, {
         displayName: nickname.trim(),
         photoURL,
       });
