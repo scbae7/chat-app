@@ -149,6 +149,11 @@ function ChatRoom() {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // effect: 채팅방 들어올 때 맨 아래로 이동
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'instant' });
+  }, [roomId]);
+
   // event handler: 텍스트 메시지 전송 처리
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -156,7 +161,7 @@ function ChatRoom() {
     const trimmed = newMessage.trim();
 
     if (!trimmed && !selectedImage) return;
-    if (trimmed && selectedImage) return;
+    // if (trimmed && selectedImage) return;
 
     try {
       const { uid, displayName, photoURL } = auth.currentUser;
@@ -166,7 +171,43 @@ function ChatRoom() {
         imageUrl = await uploadToCloudinary(selectedImage);
       }
 
-      await addDoc(collection(db, baseCollection, roomId, 'messages'), {
+      let targetUid = new URLSearchParams(location.search).get('uid');
+      let currentRoomId = roomId;
+
+      // 새 방이면 생성
+      if (!currentRoomId) {
+        const roomRef = await addDoc(collection(db, 'privateRooms'), {
+          members: [uid, targetUid],
+          createdAt: new Date(),
+          lastMessage: trimmed || (imageUrl ? '사진' : ''),
+          lastTimestamp: serverTimestamp(),
+        });
+        currentRoomId = roomRef.id;
+
+        // 방 생성 후 URL 강제 이동
+        navigate(`/dm/${currentRoomId}`);
+      }
+
+      // let roomRef;
+
+      // if (!roomId || roomId.startsWith('temp')) {
+      //   // 방 생성
+      //   roomRef = await addDoc(collection(db, baseCollection), {
+      //     members: [uid, new URLSearchParams(location.search).get('uid')],
+      //     createdAt: new Date(),
+      //     lastMessage: trimmed || (imageUrl ? '사진' : ''),
+      //     lastTimestamp: serverTimestamp(),
+      //   });
+
+      //   // 생성된 roomId로 강제 이동
+      //   navigate(`/dm/${roomRef.id}`);
+      // } else {
+      //   // 기존 방이라면 그냥 참조
+      //   roomRef = doc(db, baseCollection, roomId);
+      // }
+
+      // 메시지 저장
+      await addDoc(collection(db, baseCollection, currentRoomId, 'messages'), {
         text: imageUrl ? '' : trimmed, // 이미지만 있으면 텍스트는 비워두기
         imageUrl: imageUrl || null,
         createAt: serverTimestamp(),
@@ -175,7 +216,8 @@ function ChatRoom() {
         photoURL: photoURL || '/img/default-profile.png',
       });
 
-      await updateDoc(doc(db, baseCollection, roomId), {
+      // lastMessage 업데이트
+      await updateDoc(doc(db, baseCollection, currentRoomId), {
         lastMessage: trimmed || (imageUrl ? '사진' : ''),
         lastTimestamp: serverTimestamp(),
       });

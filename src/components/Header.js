@@ -8,7 +8,7 @@ import ImageModal from './Modal/ImageModal';
 
 import styles from './Header.module.css';
 
-function Header({ user, onLogout }) {
+function Header({ user, onLogout, onSearch }) {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -59,7 +59,7 @@ function Header({ user, onLogout }) {
             type="text"
             placeholder="채팅방 또는 사용자 검색"
             className={styles.searchInput}
-            // 검색 기능 추가 시 onChange 등 이벤트 핸들러 추가
+            onChange={(e) => onSearch && onSearch(e.target.value)}
           />
         </div>
 

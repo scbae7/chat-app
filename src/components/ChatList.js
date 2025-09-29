@@ -32,6 +32,8 @@ function ChatList() {
 
   const [unreadCounts, setUnreadCounts] = useState({});
 
+  const [searchTerm, setSearchTerm] = useState('');
+
   //  function: 마지막 메시지 시간 포맷 (오늘=시간, 그 외=날짜)
   const formatLastMessageTime = (timestamp) => {
     if (!timestamp) return '';
@@ -136,11 +138,19 @@ function ChatList() {
     });
   };
 
+  const filteredRooms = rooms.filter((room) =>
+    room.name?.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
   const getLastMessageText = (room) => room.lastMessage || '';
 
   return (
     <div className={styles.container}>
-      <Header user={user} onLogout={handleLogout} />
+      <Header
+        user={user}
+        onLogout={handleLogout}
+        onSearch={(term) => setSearchTerm(term)}
+      />
 
       <form onSubmit={createRoom} className={styles.form}>
         <input
@@ -159,7 +169,7 @@ function ChatList() {
         </button>
       </form>
       <ul className={styles.roomList}>
-        {rooms.map((room) => (
+        {filteredRooms.map((room) => (
           <li
             key={room.id}
             className={styles.roomItem}

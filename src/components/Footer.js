@@ -7,9 +7,9 @@ export default function Footer() {
   const location = useLocation();
 
   const tabs = [
-    { name: '채팅', path: '/chatList' },
-    { name: '유저', path: '/userList' },
-    { name: '프로필', path: '/profile' },
+    { name: '유저목록', path: '/userList' },
+    { name: '1:1 채팅', path: '/privateChatList' },
+    { name: '오픈채팅', path: '/chatList' },
   ];
 
   return (

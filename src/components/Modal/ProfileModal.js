@@ -23,6 +23,12 @@ function ProfileModal({ onClose, onAvatarClick }) {
   const [photoFile, setPhotoFile] = useState(null);
   const [statusMsg, setStatusMsg] = useState('');
 
+  // input 전파 방지
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleMouseDown = () => setIsDragging(true);
+  const handleMouseUp = () => setIsDragging(false);
+
   const originalNickname = user.displayName || '';
 
   const isSameNickname = nickname.trim() === originalNickname.trim();
@@ -83,6 +89,7 @@ function ProfileModal({ onClose, onAvatarClick }) {
       // firestore users 컬렉션 업데이트
       const userDocRef = doc(db, 'users', auth.currentUser.uid);
       await updateDoc(userDocRef, {
+        nickname: nickname.trim(),
         displayName: nickname.trim(),
         photoURL,
       });
@@ -100,10 +107,17 @@ function ProfileModal({ onClose, onAvatarClick }) {
     }
   };
 
+  const handleOverlayClick = (e) => {
+    if (isDragging) return;
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   if (!user) return null;
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div className={styles.overlay} onClick={handleOverlayClick}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <button className={styles.closeButton} onClick={onClose}>
           <FaTimes size={20} />
@@ -144,6 +158,8 @@ function ProfileModal({ onClose, onAvatarClick }) {
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
                 className={styles.nicknameInput}
+                onMouseDown={handleMouseDown}
+                onMouseUp={handleMouseUp}
               />
               <div className={styles.buttonGroup}>
                 <button

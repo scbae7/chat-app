@@ -7,6 +7,7 @@ import { auth } from './firebase';
 import { useUserStore } from './store/userStore';
 
 import AuthPage from './pages/AuthPage';
+import PrivateChatList from './components/PrivateChatList';
 import ChatList from './components/ChatList';
 import ChatRoom from './components/ChatRoom/ChatRoom';
 import UserList from './components/UserList';
@@ -21,6 +22,8 @@ function App() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
+      } else {
+        setUser(null);
       }
       setLoading(false);
     });
@@ -60,12 +63,16 @@ function App() {
       /> */}
         {/* ✅ 로그인 안한 유저도 접근 가능 */}
         <Route
-          path="/chatList"
-          element={!loading ? <ChatList user={user} /> : null}
-        />
-        <Route
           path="/userList"
           element={!loading ? <UserList user={user} /> : null}
+        />
+        <Route
+          path="/privateChatList"
+          element={!loading ? <PrivateChatList user={user} /> : null}
+        />
+        <Route
+          path="/chatList"
+          element={!loading ? <ChatList user={user} /> : null}
         />
         {/* 그룹 채팅 */}
         <Route
@@ -73,6 +80,10 @@ function App() {
           element={!loading ? <ChatRoom user={user} /> : null}
         />
         {/* 1:1 채팅 */}
+        <Route
+          path="/dm"
+          element={!loading ? <ChatRoom user={user} /> : null}
+        />
         <Route
           path="/dm/:roomId"
           element={!loading ? <ChatRoom user={user} /> : null}
