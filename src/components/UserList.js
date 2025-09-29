@@ -108,6 +108,7 @@ export default function UserList() {
 
   /// 4. 유저가 채팅한 적 있는지 체크
   const hasChatted = (user) => {
+    if (!currentUser) return false;
     return rooms.some(
       (room) =>
         room.members.includes(user.uid) &&
