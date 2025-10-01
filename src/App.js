@@ -30,8 +30,10 @@ function App() {
     return () => unsubscribe();
   }, []);
 
+  const showFooter = !loading && user;
+
   return (
-    <div style={{ paddingBottom: '60px' }}>
+    <div style={{ paddingBottom: showFooter ? '60px' : '0' }}>
       <Routes>
         {/* 로그인 / 회원가입 */}
         <Route path="/" element={<AuthPage />} />
@@ -92,7 +94,7 @@ function App() {
         {/* 유효하지 않은 경로일 경우 로그인으로 */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-      {!loading && user && <Footer />}
+      {showFooter && <Footer />}
     </div>
   );
 }
