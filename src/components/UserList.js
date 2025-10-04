@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { useUserStore } from '../store/userStore';
+import { goToDM } from '../utils/chat2';
 import Header from '../components/Header';
 import ConfirmModal from '../components/Modal/ConfirmModal';
 import { FaUserCircle } from 'react-icons/fa';
@@ -83,19 +84,12 @@ export default function UserList() {
   const handleConfirm = () => {
     if (!targetUser) return;
 
-    const existingRoom = rooms.find(
-      (room) =>
-        room.members.includes(currentUser.uid) &&
-        room.members.includes(targetUser.uid),
-    );
-
-    if (existingRoom) {
-      // 이미 방 있으면 그 방으로 이동
-      navigate(`/dm/${existingRoom.id}`);
-    } else {
-      // 방이 없으면 uid만 들고 dm페이지로 이동
-      navigate(`/dm?uid=${targetUser.uid}`);
-    }
+    goToDM({
+      navigate,
+      currentUserUid: currentUser.uid,
+      targetUserUid: targetUser.uid,
+      rooms,
+    });
 
     setTargetUser(null);
   };
@@ -107,14 +101,14 @@ export default function UserList() {
   };
 
   /// 4. 유저가 채팅한 적 있는지 체크
-  const hasChatted = (user) => {
-    if (!currentUser) return false;
-    return rooms.some(
-      (room) =>
-        room.members.includes(user.uid) &&
-        room.members.includes(currentUser.uid),
-    );
-  };
+  // const hasChatted = (user) => {
+  //   if (!currentUser) return false;
+  //   return rooms.some(
+  //     (room) =>
+  //       room.members.includes(user.uid) &&
+  //       room.members.includes(currentUser.uid),
+  //   );
+  // };
 
   //  5. 검색어 필터 적용
   const filteredUsers = users.filter((u) =>
@@ -144,9 +138,9 @@ export default function UserList() {
             )}
             <div className={styles.userInfo}>
               <span className={styles.userName}>{user.displayName}</span>
-              {hasChatted(user) && (
+              {/* {hasChatted(user) && (
                 <span className={styles.chattedLabel}>💬 채팅함</span>
-              )}
+              )} */}
             </div>
             <button
               className={styles.chatBtn}

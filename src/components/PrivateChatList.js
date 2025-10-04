@@ -7,6 +7,8 @@ import {
   where,
   addDoc,
   onSnapshot,
+  doc,
+  getDoc,
   orderBy,
 } from 'firebase/firestore';
 import { db, auth } from '../firebase';
@@ -19,15 +21,16 @@ import styles from './UserList.module.css';
 function PrivateChatList() {
   const [users, setUsers] = useState([]);
   const [rooms, setRooms] = useState([]);
+  const [unreadCounts, setUnreadCounts] = useState({});
 
   const currentUser = useUserStore((state) => state.user);
+
   const navigate = useNavigate();
 
   const [targetUser, setTargetUser] = useState(null);
 
   // 채팅 유저 분리
   const [chattedUsers, setChattedUsers] = useState([]);
-  const [unchattedUsers, setUnchattedUsers] = useState([]);
 
   // 검색어 필터링
   const [searchTerm, setSearchTerm] = useState('');
@@ -55,7 +58,7 @@ function PrivateChatList() {
     return () => unsubscribe();
   }, [currentUser]);
 
-  // 2. 현재 사용자가 참여 중인 채팅방 가져오기 (실시간)
+  // 2. 현재 사용자가 참여 중인 채팅방 가져오기 (실시간) 및 안 읽음 메시지 계산
   useEffect(() => {
     if (!currentUser) return;
     const q = query(
@@ -63,13 +66,60 @@ function PrivateChatList() {
       where('members', 'array-contains', currentUser.uid),
       orderBy('lastTimestamp', 'desc'),
     );
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
       const roomList = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
       setRooms(roomList);
 
+      // 안 읽음 메시지 계산
+      const counts = {};
+      await Promise.all(
+        roomList.map(async (room) => {
+          const lastReadRef = doc(
+            db,
+            'privateRooms',
+            room.id,
+            'lastReads',
+            currentUser.uid,
+          );
+          const lastReadSnap = await getDoc(lastReadRef);
+          let lastReadTime = null;
+          if (lastReadSnap.exists()) {
+            lastReadTime = lastReadSnap.data().lastRead;
+          }
+
+          // lastRead 이후 메시지 수 조회
+          const messagesRef = collection(
+            db,
+            'privateRooms',
+            room.id,
+            'messages',
+          );
+          let unreadQuery;
+          if (lastReadTime) {
+            unreadQuery = query(
+              messagesRef,
+              where('createAt', '>', lastReadTime),
+            );
+          } else {
+            unreadQuery = messagesRef;
+          }
+
+          const unreadSnap = await getDocs(unreadQuery);
+          const unreadMessages = unreadSnap.docs
+            .map((doc) => doc.data())
+            .filter((msg) => msg.uid !== currentUser.uid);
+
+          counts[room.id] = unreadMessages.length;
+        }),
+      );
+      // console.log(counts);
+
+      setUnreadCounts(counts);
+
+      // 채팅한 사용자 목록 생성
       const chatted = roomList
         .filter((room) => room.lastMessage) // 메시지가 있을 때만
         .map((room) => {
@@ -189,9 +239,19 @@ function PrivateChatList() {
                     : '메시지가 없습니다'}
                 </span>
               </div>
-              {formattedTime && (
-                <span className={styles.lastMessageTime}>{formattedTime}</span>
-              )}
+              {/* 오른쪽에 시간과 뱃지 */}
+              <div className={styles.rightInfo}>
+                {formattedTime && (
+                  <span className={styles.lastMessageTime}>
+                    {formattedTime}
+                  </span>
+                )}
+                {unreadCounts[user.roomId] > 0 && (
+                  <span className={styles.unreadBadge}>
+                    {unreadCounts[user.roomId]}
+                  </span>
+                )}
+              </div>
             </li>
           );
         })}

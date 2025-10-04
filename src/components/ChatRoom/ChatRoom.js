@@ -70,6 +70,9 @@ function ChatRoom() {
   // state: 이미지 모달 상태
   const [modalImage, setModalImage] = useState(null);
 
+  // state: 이미지 업로드 로딩 상태
+  const [sending, setSending] = useState(false);
+
   // state: 이미지 미리보기 및 에러 상태
   const [selectedImage, setSelectedImage] = useState(null);
   const { previewURL: imagePreviewUrl, error: imageError } =
@@ -92,37 +95,52 @@ function ChatRoom() {
       querySnapshot.forEach((doc) => {
         msgs.push({ id: doc.id, ...doc.data() });
       });
+
       setMessages(msgs);
     });
 
     return () => unsubscribe();
   }, [roomId, baseCollection]);
 
-  // effect: 마지막 읽은 시간 업데이트
+  // 실시간 lastRead업데이트
   useEffect(() => {
     if (!user || !roomId) return;
 
-    const updateLastRead = async () => {
-      try {
-        const lastReadRef = doc(
-          db,
-          baseCollection,
-          roomId,
-          'lastReads',
-          user.uid,
-        );
-        await setDoc(
-          lastReadRef,
-          { lastRead: serverTimestamp() },
-          { merge: true },
-        );
-      } catch (error) {
-        console.error('lastRead 업데이트 실패:', error);
-      }
-    };
+    const messageRef = collection(db, `${baseCollection}/${roomId}/messages`);
+    const q = query(messageRef, orderBy('createAt'));
 
-    updateLastRead();
-  }, [roomId, user, baseCollection]);
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const msgs = [];
+      snapshot.forEach((doc) => msgs.push({ id: doc.id, ...doc.data() }));
+      setMessages(msgs);
+
+      snapshot.docChanges().forEach(async (change) => {
+        if (change.type === 'added') {
+          const msgData = change.doc.data();
+          if (msgData.uid !== user.uid) {
+            try {
+              const lastReadRef = doc(
+                db,
+                baseCollection,
+                roomId,
+                'lastReads',
+                user.uid,
+              );
+              await setDoc(
+                lastReadRef,
+                { lastRead: serverTimestamp() },
+                { merge: true },
+              );
+            } catch (error) {
+              console.error('실시간 lastRead 업데이트 실패', error);
+            }
+          }
+        }
+      });
+    });
+
+    return () => unsubscribe();
+  }, [roomId, baseCollection, user]);
 
   // effect: 채팅방 정보 조회
   useEffect(() => {
@@ -157,6 +175,7 @@ function ChatRoom() {
   // event handler: 텍스트 메시지 전송 처리
   const sendMessage = async (e) => {
     e.preventDefault();
+    if (sending) return;
 
     const trimmed = newMessage.trim();
 
@@ -164,6 +183,7 @@ function ChatRoom() {
     // if (trimmed && selectedImage) return;
 
     try {
+      setSending(true);
       const { uid, displayName, photoURL } = auth.currentUser;
       let imageUrl = null;
 
@@ -228,6 +248,8 @@ function ChatRoom() {
     } catch (error) {
       console.error('메시지 전송 실패', error);
       alert('메시지 전송 중 문제가 발생했습니다.');
+    } finally {
+      setSending(false);
     }
   };
 
@@ -329,6 +351,8 @@ function ChatRoom() {
       }
     }
 
+    // DM 시작 함수
+
     return (
       <div
         key={msg.id}
@@ -344,6 +368,7 @@ function ChatRoom() {
             className={styles.profileImgInMessage}
             onClick={() =>
               setSelectedUserInfo({
+                uid: msg.uid,
                 displayName: msg.displayName,
                 photoURL: msg.photoURL || '/img/default-profile.png',
                 email: msg.email || '이메일 비공개',
@@ -458,6 +483,9 @@ function ChatRoom() {
             userInfo={selectedUserInfo}
             onClose={() => setSelectedUserInfo(null)}
             onAvatarClick={() => setModalImage(selectedUserInfo.photoURL)}
+            isPrivateRoom={isPrivateChat}
+            rooms={roomInfo ? [roomInfo] : []} // 현재 roomInfo도 전달 가능
+            currentUser={user}
           />
         )}
       </div>
@@ -472,6 +500,7 @@ function ChatRoom() {
         imagePreviewUrl={imagePreviewUrl}
         onCancelImage={resetImagePreview}
         imageError={imageError}
+        sending={sending}
       />
 
       {/* 이모지 선택 모달 */}

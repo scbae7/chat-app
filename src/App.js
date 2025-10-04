@@ -36,7 +36,18 @@ function App() {
     <div style={{ paddingBottom: showFooter ? '60px' : '0' }}>
       <Routes>
         {/* 로그인 / 회원가입 */}
-        <Route path="/" element={<AuthPage />} />
+        <Route
+          path="/"
+          element={
+            !loading ? (
+              user ? (
+                <Navigate to="/userList" replace /> // 로그인 상태면 유저 리스트로 이동
+              ) : (
+                <AuthPage /> // 아니면 로그인 페이지
+              )
+            ) : null
+          }
+        />
 
         {/* ✅ 로그인된 유저만 ChatRoom 접근 가능 */}
         {/* <Route

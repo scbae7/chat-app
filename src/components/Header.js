@@ -7,6 +7,7 @@ import ProfileMenu from './Common/ProfileMenu';
 import ImageModal from './Modal/ImageModal';
 
 import styles from './Header.module.css';
+import { useUnreadStore } from '../store/unreadStore';
 
 function Header({ user, onLogout, onSearch }) {
   const navigate = useNavigate();
@@ -17,6 +18,8 @@ function Header({ user, onLogout, onSearch }) {
   const [modalImage, setModalImage] = useState(null);
 
   const dropdownRef = useRef(null);
+
+  const unreadCount = useUnreadStore((state) => state.unreadCount);
 
   // 드롭다운 외부 클릭 시 닫기
   useEffect(() => {
@@ -30,7 +33,7 @@ function Header({ user, onLogout, onSearch }) {
   }, []);
 
   const handleLogoClick = () => {
-    navigate('/chatList');
+    navigate('/userList');
   };
 
   const toggleDropdown = () => {
@@ -66,7 +69,10 @@ function Header({ user, onLogout, onSearch }) {
         <div className={styles.rightMenu}>
           <button className={styles.iconButton} title="알림">
             <FaBell />
-            {/* <span className={styles.badge}>3</span> */}
+            {unreadCount > 0 && (
+              <span className={styles.badge}>{unreadCount}</span>
+            )}
+            <span className={styles.badge}>3</span>
           </button>
 
           <ProfileMenu

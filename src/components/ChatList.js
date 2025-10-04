@@ -13,6 +13,7 @@ import {
   getDoc,
   where,
   getDocs,
+  setDoc,
   doc,
 } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -94,15 +95,20 @@ function ChatList() {
 
             if (lastReadTime) {
               unreadQuery = query(
-                collection(db, 'rooms', roomId, 'messages', ''),
+                collection(db, 'rooms', roomId, 'messages'),
                 where('createAt', '>', lastReadTime),
               );
             } else {
-              unreadQuery = collection(db, 'rooms', roomId, 'messages', '');
+              unreadQuery = collection(db, 'rooms', roomId, 'messages');
             }
 
             const unreadSnap = await getDocs(unreadQuery);
-            counts[roomId] = unreadSnap.size;
+
+            const unreadMessages = unreadSnap.docs
+              .map((doc) => doc.data())
+              .filter((msg) => msg.uid !== auth.currentUser.uid);
+
+            counts[roomId] = unreadMessages.length;
           } else {
             counts[roomId] = 0;
           }
@@ -136,6 +142,25 @@ function ChatList() {
     auth.signOut().then(() => {
       navigate('/login');
     });
+  };
+
+  const handleRoomClick = async (roomId) => {
+    const lastReadRef = doc(
+      db,
+      'rooms',
+      roomId,
+      'lastReads',
+      auth.currentUser.uid,
+    );
+    await setDoc(
+      lastReadRef,
+      {
+        lastRead: serverTimestamp(),
+      },
+      { merge: true },
+    );
+
+    navigate(`/chat/${roomId}`);
   };
 
   const filteredRooms = rooms.filter((room) =>
@@ -173,11 +198,11 @@ function ChatList() {
           <li
             key={room.id}
             className={styles.roomItem}
-            onClick={() => navigate(`/chat/${room.id}`)}
+            onClick={() => handleRoomClick(room.id)}
             tabIndex={0}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
-                navigate(`/chat/${room.id}`);
+                handleRoomClick(room.id);
               }
             }}
           >

@@ -176,6 +176,19 @@
   margin-top: 6px;
 }
 
+.dmButton {
+  margin-top: 12px;
+  padding: 8px 16px;
+  background-color: #007aff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.dmButton:hover {
+  background-color: #005bb5;
+}
+
 /* ✅ 모바일 대응 */
 @media (max-width: 480px) {
   .modal {

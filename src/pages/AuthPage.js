@@ -28,7 +28,7 @@ function AuthPage() {
           {isLogin ? '회원가입 하기' : '로그인 하기'}
         </button>
 
-        <button onClick={handleGuestAccess}>Guest 접속하기</button>
+        <button onClick={handleGuestAccess}>비회원 로그인</button>
       </div>
       <div className={styles.right}>
         {isLogin ? (

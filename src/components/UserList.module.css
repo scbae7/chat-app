@@ -44,6 +44,22 @@
     box-shadow 0.25s ease;
 }
 
+/* UserItem에 작은 미니 뱃지 추가 (선택 사항) */
+.userItem .unreadBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #fff;
+  background-color: #ff3d00;
+  border-radius: 50%;
+  margin-left: auto;
+}
+
 .userItem:hover {
   background-color: #e8ebff;
   box-shadow: 0 4px 12px rgba(63, 81, 181, 0.15);
@@ -79,6 +95,12 @@
   flex-direction: column;
   flex: 1; /* 공간을 채우도록 */
   position: relative;
+}
+.rightInfo {
+  display: flex;
+  flex-direction: column; /* 세로 배치 */
+  align-items: flex-end; /* 오른쪽 정렬 */
+  gap: 4px;
 }
 
 .userName {
@@ -176,5 +198,11 @@
 
   .lastMessage {
     font-size: 0.75rem;
+  }
+
+  .userItem .unreadBadge {
+    min-width: 14px;
+    height: 14px;
+    font-size: 0.6rem;
   }
 }

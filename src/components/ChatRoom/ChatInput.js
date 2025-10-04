@@ -12,11 +12,13 @@ function ChatInput({
   imagePreviewUrl,
   onCancelImage,
   imageError,
+  sending,
 }) {
   const fileInputRef = useRef();
 
   // ESC 키 누르면 이미지 미리보기 취소
   useEffect(() => {
+    if (sending) return;
     const handleEsc = (e) => {
       if (e.key === 'Escape' && imagePreviewUrl) {
         onCancelImage();
@@ -26,13 +28,14 @@ function ChatInput({
     return () => {
       document.removeEventListener('keydown', handleEsc);
     };
-  }, [imagePreviewUrl, onCancelImage]);
+  }, [imagePreviewUrl, onCancelImage, sending]);
 
   const handleImageButtonClick = () => {
-    fileInputRef.current?.click();
+    if (!sending) fileInputRef.current?.click();
   };
 
   const handleFileChange = (e) => {
+    if (sending) return;
     if (e.target.files && e.target.files[0]) {
       onImageUpload(e.target.files[0]);
       e.target.value = null;
@@ -49,6 +52,7 @@ function ChatInput({
           className={styles.iconButton}
           onClick={onEmojiClick}
           aria-label="이모지 선택"
+          disabled={sending}
         >
           <FaSmile />
         </button>
@@ -58,6 +62,7 @@ function ChatInput({
           className={styles.iconButton}
           onClick={handleImageButtonClick}
           aria-label="이미지 업로드"
+          disabled={sending}
         >
           <FaImage />
         </button>
@@ -68,6 +73,7 @@ function ChatInput({
           ref={fileInputRef}
           onChange={handleFileChange}
           className={styles.hiddenFileInput}
+          disabled={sending}
         />
 
         {!imagePreviewUrl && (
@@ -80,6 +86,7 @@ function ChatInput({
             autoComplete="off"
             autoCorrect="off"
             spellCheck={false}
+            disabled={sending}
           />
         )}
       </div>
@@ -96,10 +103,14 @@ function ChatInput({
             onClick={onCancelImage}
             className={styles.cancelPreviewBtn}
             aria-label="미리보기 취소"
+            disabled={sending}
           >
             X
           </button>
-          <div className={styles.escInfo}>ESC 키를 눌러 취소할 수 있습니다</div>
+          <div className={styles.escInfo}>
+            ESC 키를 눌러 취소할 수 있습니다
+            {sending && '(전송 중에는 취소 불가)'}
+          </div>
         </div>
       )}
 
@@ -109,11 +120,12 @@ function ChatInput({
         type="submit"
         className={styles.button}
         disabled={
+          sending ||
           (!newMessage.trim() && !imagePreviewUrl) ||
           (newMessage.trim() && imagePreviewUrl)
         }
       >
-        보내기
+        {sending ? '전송 중...' : '보내기'}
       </button>
     </form>
   );
