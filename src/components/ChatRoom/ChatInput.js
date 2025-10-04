@@ -86,7 +86,7 @@ function ChatInput({
             autoComplete="off"
             autoCorrect="off"
             spellCheck={false}
-            disabled={sending}
+            readOnly={sending}
           />
         )}
       </div>
